@@ -1,13 +1,7 @@
-let controlLength = function (string, maxLength) {
-  if (string.length > maxLength) {
-    return false;
-  }
+const controlLength = (string, maxLength) => (string.length <= maxLength);
 
-  return true;
-}
-
-let checkingPalindrome = function (string) {
-  let doneString = string.replaceAll(' ','').toLowerCase();
+const checkingPalindrome = (string) => {
+  const doneString = string.replaceAll(' ','').toLowerCase();
   for (let symbol = 0; doneString.length / 2 > symbol; symbol++) {
     if (doneString.at(symbol) !== doneString.at(-symbol - 1)) {
       return false;
