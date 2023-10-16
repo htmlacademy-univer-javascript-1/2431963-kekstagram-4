@@ -3,6 +3,8 @@ const AVATAR_COUNT = 6;
 const LIKE_MIN_COUNT = 15;
 const LIKE_MAX_COUNT = 200;
 const COMMENT_COUNT = 30;
+const ONE_MESSAGE = 1;
+const TWO_MESSAGE = 2;
 const COMMENT_LINES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -48,7 +50,7 @@ const createIdGenerator = () => {
 const generateCommentId = createIdGenerator();
 
 const createMessage = () => Array.form (
-  {length: getRandomInteger(1,2) },
+  {length: getRandomInteger(ONE_MESSAGE, TWO_MESSAGE) },
   () => getRandomArrayElement(COMMENT_LINES),
 ).join(' ');
 
