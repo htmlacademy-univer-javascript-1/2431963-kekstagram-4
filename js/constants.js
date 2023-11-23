@@ -25,6 +25,7 @@ for (let i = 1; i <= 6; i++) {
 
 const renderMessages = [
   'Всё отлично!',
+  'Супер!', 'Удачное фото',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
@@ -45,7 +46,7 @@ const renderName = [
 ];
 
 const COUNT_COPY = 25;
-const COUNT_COMMENT = 3;
+const COUNT_COMMENT = renderMessages.length;
 
 const createComment = () => ({
   id: generateCommentId(),
