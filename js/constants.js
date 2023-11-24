@@ -1,4 +1,4 @@
-import { getRandomArrayElement } from './util.js';
+import { getRandomArrayElement, getRandomInteger } from './util.js';
 import {generatePhotoId, generateCommentId} from './create-all-ID.js';
 
 const renderUrl = [];
@@ -55,7 +55,7 @@ const createComment = () => ({
   name: getRandomArrayElement(renderName),
 });
 
-const createComments = () => Array.from({ length: COUNT_COMMENT }, createComment);
+const createComments = () => Array.from({ length: getRandomInteger(0, COUNT_COMMENT) }, createComment);
 
 const createObject = () => ({
   id: generatePhotoId(),
