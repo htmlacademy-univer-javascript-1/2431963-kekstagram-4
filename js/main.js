@@ -1,4 +1,9 @@
-import { getPictures } from './data.js';
-import { renderThumbnails } from './thumbnail.js';
+import { createObjects } from './constants.js';
+import { renderThumbnails } from './create-thumbnails.js';
+import { addHandlers } from './displayBigPicture.js';
 
-renderThumbnails(getPictures());
+const objects = createObjects();
+
+renderThumbnails(objects);
+
+addHandlers(objects);
