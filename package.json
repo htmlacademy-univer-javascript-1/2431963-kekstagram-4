@@ -1,8 +1,7 @@
 {
   "name": "kekstagram",
-  "version": "26.0.0",
-  "private": true,
-  "description": "Личный проект «Кекстаграм» от HTML Academy",
+  "version": "1.0.0",
+  "description": "* Студент: [Данил Ашиев](https://up.htmlacademy.ru/univer-js1/4/user/2431963). * Наставник: `Арсений Березин`.",
   "repository": {
     "type": "git",
     "url": "git@github.com:htmlacademy-univer-javascript-1/2431963-kekstagram-4.git"
@@ -16,13 +15,13 @@
     "eslint-config-htmlacademy": "5.1.2"
   },
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "pristinejs": "^1.1.0"
+  },
+  "main": "index.js",
   "scripts": {
     "start": "browser-sync start --server --no-ui --files \"js/**/*.js\"",
-    "lint": "eslint js/"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "engines": {
-    "node": "16.x",
-    "npm": "8.x"
-  }
+  "author": ""
 }

@@ -4,6 +4,7 @@ const currentCounterElement = document.querySelector('.comments-current');
 const COMMENT_COUNT = 5;
 let commentMarker = COMMENT_COUNT;
 let itemComments; //ВРЕМЕННО itemComments
+
 const createComment = (comment) => {
   const {avatar, name, message} = comment;
   const commentLiElement = document.createElement('li');
@@ -19,12 +20,16 @@ const createComment = (comment) => {
   commentParagraphElement.textContent = message;
   commentLiElement.append(commentImageElement);
   commentLiElement.append(commentParagraphElement);
+
   return commentLiElement;
 };
+
 const renderComment = (comment) => {
   commentList.append(createComment(comment));
 };
+
 const loadedComments = (marker, length) => marker > length ? length : marker;
+
 const onLoadMore = (evt) => {
   evt.preventDefault();
   itemComments.slice(commentMarker, commentMarker + COMMENT_COUNT).forEach((comment) => { //ВРЕМЕННО itemComments
@@ -32,10 +37,12 @@ const onLoadMore = (evt) => {
   });
   commentMarker = commentMarker + COMMENT_COUNT;
   currentCounterElement.textContent = loadedComments(commentMarker, itemComments.length); //ВРЕМЕННО itemComments
+
   if(commentMarker >= itemComments.length) { //ВРЕМЕННО itemComments
     loadingMoreElement.classList.add('hidden');
   }
 };
+
 const renderComments = (comments) => {
   itemComments = comments; //ВРЕМЕННО itemComments
   commentList.innerHTML = '';
@@ -53,11 +60,13 @@ const renderComments = (comments) => {
     loadingMoreElement.addEventListener('click', onLoadMore); //Возможно изменится
   }
 };
+
 export const resetComments = () => {
   commentMarker = COMMENT_COUNT;
   loadingMoreElement.classList.remove('hidden');
   loadingMoreElement.removeEventListener('click', onLoadMore); //Возможно изменится
 };
+
 export const renderItemDetails = (data, target) => {
   const {comments, description, likes, url} = data;
   const bigImage = target.querySelector('.big-picture__img img');

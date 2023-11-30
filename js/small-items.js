@@ -4,6 +4,7 @@ const itemsContainer = document.querySelector('.pictures');
 const itemTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture');
+
 //Функция создает элемент с данными
 const createSmallItem = (data) => {
   const {id, url, description, likes, comments} = data;
@@ -18,6 +19,7 @@ const createSmallItem = (data) => {
   userItemLikes.textContent = likes;
   return userItem;
 };
+
 //Функция для создания и отрисовки элементов
 export const renderSmallItems = (items) => {
   const fragment = document.createDocumentFragment();

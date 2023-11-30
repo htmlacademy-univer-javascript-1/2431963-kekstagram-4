@@ -1,7 +1,7 @@
 /* Общие стили. Каркас
-   ========================================================================== */
+  ========================================================================== */
 
-@font-face {
+  @font-face {
   font-family: "Open Sans";
   src: url("../fonts/OpenSansCondensed-Bold.woff2") format("woff2"),
       url("../fonts/OpenSansCondensed-Bold.woff") format("woff");
@@ -58,8 +58,8 @@ main {
 
 
 /**
- * Кнопка закрытия модального окна
- */
+  * Кнопка закрытия модального окна
+  */
 
 .cancel {
   display: block;
@@ -96,8 +96,8 @@ main {
 
 
 /**
- * Оверлей под экранами
- */
+  * Оверлей под экранами
+  */
 
 .overlay {
   position: fixed;
@@ -118,7 +118,7 @@ main {
 
 
 /* Блок с фильтрами изображений других пользователей
-   ========================================================================== */
+    ========================================================================== */
 
 .img-filters {
   padding: 20px 0;
@@ -128,8 +128,8 @@ main {
   display: flex;
 
   -webkit-box-pack: center;
-     -ms-flex-pack: center;
-   justify-content: center;
+      -ms-flex-pack: center;
+    justify-content: center;
 }
 
 .img-filters--inactive {
@@ -183,7 +183,7 @@ main {
 
 
 /* Блок, в котором размещаются фотографии других пользователей
-   ========================================================================== */
+    ========================================================================== */
 
 .pictures {
   display: -ms-grid;
@@ -270,7 +270,7 @@ main {
 
 
 /* Поле для загрузки нового изображения
-   ========================================================================== */
+    ========================================================================== */
 
 .img-upload {
   -ms-grid-column: 3;
@@ -368,7 +368,7 @@ main {
 
 
 /* Окно для редактирования изображения
-   ========================================================================== */
+    ========================================================================== */
 
 .img-upload__overlay {
   position: fixed;
@@ -395,8 +395,8 @@ main {
 
 
 /**
- * Кнопки изменения масштаба изобраения
- */
+  * Кнопки изменения масштаба изобраения
+  */
 
 .img-upload__scale {
   position: absolute;
@@ -496,19 +496,19 @@ main {
 
 
 /**
- * Превью изображения
- */
+  * Превью изображения
+  */
 
 .img-upload__preview {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-     -ms-flex-align: center;
+      -ms-flex-align: center;
         align-items: center;
   -webkit-box-pack: center;
-     -ms-flex-pack: center;
-   justify-content: center;
+      -ms-flex-pack: center;
+    justify-content: center;
 
   width: 600px;
   height: 600px;
@@ -524,29 +524,42 @@ main {
 
 
 /**
- * Шкала регулирования глубины фильтра
- */
+  * Шкала регулирования глубины фильтра
+  */
 
 .effect-level {
   position: absolute;
-  bottom: 10px;
+  bottom: 9px;
   left: 50%;
 
+  padding: 7px 11px 0;
+
   width: 495px;
-  height: 33px;
+  height: 34px;
 
   font-size: 12px;
-  line-height: 42px;
   text-align: center;
   color: #ffffff;
   white-space: nowrap;
 
   background-color: rgba(0, 0, 0, 0.6);
-  border-radius: 33px;
+  border-radius: 34px;
 
   -webkit-transform: translateX(-50%);
       -ms-transform: translateX(-50%);
           transform: translateX(-50%);
+}
+
+.effect-level .noUi-target {
+  border-radius: 16px;
+}
+
+.effect-level .noUi-connects {
+  border-radius: 13px;
+}
+
+.effect-level .noUi-connect {
+  background: #ffe753;
 }
 
 .effect-level__value {
@@ -555,8 +568,8 @@ main {
 
 
 /**
- * Блок с эффектами, которые можно применить к изображению
- */
+  * Блок с эффектами, которые можно применить к изображению
+  */
 
 .effects {
   margin: 0;
@@ -574,8 +587,8 @@ main {
   display: flex;
 
   -webkit-box-pack: center;
-     -ms-flex-pack: center;
-   justify-content: center;
+      -ms-flex-pack: center;
+    justify-content: center;
 
   list-style: none;
   text-align: center;
@@ -657,8 +670,12 @@ main {
 
 
 /**
- * Блок добавления хэштегов и комментария к изображению
- */
+  * Блок добавления хэштегов и комментария к изображению
+  */
+
+.img-upload__field-wrapper {
+  position: relative;
+}
 
 .text {
   margin: 0;
@@ -667,6 +684,14 @@ main {
 
   text-align: center;
   border: none;
+}
+
+.text__error {
+  position: absolute;
+  right: 69px;
+  top: -19px;
+  color: tomato;
+  font-size: 12px;
 }
 
 .text__hashtags {
@@ -699,8 +724,8 @@ main {
 
 
 /**
- * Кнопка для отправки изображения
- */
+  * Кнопка для отправки изображения
+  */
 
 .img-upload__submit {
   padding: 10px 20px;
@@ -735,8 +760,8 @@ main {
 
 
 /*
- * Кнопка для закрытия окна редактирования изображения
- */
+  * Кнопка для закрытия окна редактирования изображения
+  */
 
 .img-upload__cancel {
   position: absolute;
@@ -752,7 +777,7 @@ main {
 
 
 /* Окно полноэкранного просмотра изображения
-   ========================================================================== */
+    ========================================================================== */
 
 .big-picture__preview {
   position: absolute;
@@ -780,8 +805,8 @@ main {
 
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-     -ms-flex-direction: column;
-         flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
 
   max-width: 600px;
 
@@ -795,8 +820,8 @@ main {
 
 
 /*
- * Подпись к изображению
- */
+  * Подпись к изображению
+  */
 
 .social__header {
   padding: 15px 15px;
@@ -806,11 +831,11 @@ main {
   display: flex;
 
   -webkit-box-pack: start;
-     -ms-flex-pack: start;
-   justify-content: flex-start;
+      -ms-flex-pack: start;
+    justify-content: flex-start;
 
   -webkit-box-align: center;
-     -ms-flex-align: center;
+      -ms-flex-align: center;
         align-items: center;
 
   border-bottom: 1px solid #cccccc;
@@ -877,12 +902,12 @@ main {
 
 
 /*
- * Комментарии к изображению
- */
+  * Комментарии к изображению
+  */
 
 .social__comments {
   -ms-flex-preferred-size: 100%;
-               flex-basis: 100%;
+                flex-basis: 100%;
 
   list-style: none;
 
@@ -901,7 +926,7 @@ main {
   display: flex;
 
   -webkit-box-align: center;
-     -ms-flex-align: center;
+      -ms-flex-align: center;
         align-items: center;
 }
 
@@ -937,8 +962,8 @@ main {
 
 
 /**
- * Спиннер загрузки комментариев и его анимация
- */
+  * Спиннер загрузки комментариев и его анимация
+  */
 
 .spinner::after,
 .comments-loader:active::after {
@@ -988,8 +1013,8 @@ main {
 
 
 /*
- * Форма для отправки комментария
- */
+  * Форма для отправки комментария
+  */
 
 .social__footer {
   border-top: 1px solid #cccccc;
@@ -1061,7 +1086,7 @@ main {
 
 
 /* Подвал сайта
-   ========================================================================== */
+    ========================================================================== */
 
 .page-footer {
   margin-top: 30px;
@@ -1075,18 +1100,18 @@ main {
   display: flex;
 
   -webkit-box-align: start;
-     -ms-flex-align: start;
+      -ms-flex-align: start;
         align-items: flex-start;
 
   -webkit-box-pack: justify;
-     -ms-flex-pack: justify;
-   justify-content: space-between;
+      -ms-flex-pack: justify;
+    justify-content: space-between;
 }
 
 
 /*
- * Копирайт Академии
- */
+  * Копирайт Академии
+  */
 
 .copyright {
   font-size: 12px;
@@ -1112,8 +1137,8 @@ main {
 
 
 /*
- * Ссылки на социальные сети
- */
+  * Ссылки на социальные сети
+  */
 
 .contacts {
   margin: 0;
@@ -1156,7 +1181,7 @@ main {
 
 
 /* Экраны с сообщениями для пользователя
-   ========================================================================== */
+    ========================================================================== */
 
 .img-upload__message {
   position: absolute;
@@ -1181,8 +1206,8 @@ main {
 
 
 /**
- * Экраны ошибки и успеха загрузки изображения
- */
+  * Экраны ошибки и успеха загрузки изображения
+  */
 
 .error,
 .success {
@@ -1195,7 +1220,7 @@ main {
   top: 0;
   right: 0;
   bottom: 0;
-  z-index: 1;
+  z-index: 10;
 
   background-color: rgba(0, 0, 0, 0.8);
 }
@@ -1287,8 +1312,8 @@ main {
 
 
 /**
- * Экран загрузки изображения
- */
+  * Экран загрузки изображения
+  */
 
 .img-upload__message--loading::before {
   content: "";
@@ -1324,7 +1349,7 @@ main {
 
 
 /* Адаптивности чуток
-   ========================================================================== */
+    ========================================================================== */
 
 @media (min-width: 1024px) {
   .img-upload__wrapper {
