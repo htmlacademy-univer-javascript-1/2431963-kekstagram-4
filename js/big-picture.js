@@ -4,6 +4,7 @@ import { renderImage, renderComments } from './gallery.js';
 
 export const bigPictureImage = document.querySelector('.big-picture');
 const bigPictureCloseButton = document.querySelector('.big-picture__cancel');
+const commentLoader = bigPictureImage.querySelector('.comments-loader');
 
 let onLoadComments;
 
@@ -17,7 +18,6 @@ const onDocumentKeydown = (evt) => {
 function openImage (image) {
   if (image.target.classList.contains('picture__img')){
     bigPictureImage.classList.remove('hidden');
-    const commentLoader = bigPictureImage.querySelector('.comments-loader');
     image.preventDefault();
     commentLoader.classList.remove('hidden');
     const commentsObj = renderComments(image, 0, commentLoader);
