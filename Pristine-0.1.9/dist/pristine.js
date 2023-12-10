@@ -5,21 +5,17 @@
 }(this, (function () { 'use strict';
 
     var lang = {
-        en: {
-            required: "This field is required",
-            email: "This field requires a valid e-mail address",
-            number: "This field requires a number",
-            integer: "This field requires an integer value",
-            url: "This field requires a valid website URL",
-            tel: "This field requires a valid telephone number",
-            maxlength: "This fields length must be < ${1}",
-            minlength: "This fields length must be > ${1}",
-            min: "Minimum value for this field is ${1}",
-            max: "Maximum value for this field is ${1}",
-            pattern: "Please match the requested format",
-            equals: "The two fields do not match",
-            default: "Please enter a correct value"
-        }
+        required: "This field is required",
+        email: "This field requires a valid e-mail address",
+        number: "This field requires a number",
+        integer: "This field requires an integer value",
+        url: "This field requires a valid website URL",
+        tel: "This field requires a valid telephone number",
+        maxlength: "This fields length must be < ${1}",
+        minlength: "This fields length must be > ${1}",
+        min: "Minimum value for this field is ${1}",
+        max: "Maximum value for this field is ${1}",
+        pattern: "Please match the requested format"
     };
 
     function findAncestor(el, cls) {
@@ -48,6 +44,10 @@
         return obj1;
     }
 
+    function isFunction(obj) {
+        return !!(obj && obj.constructor && obj.call && obj.apply);
+    }
+
     var defaultConfig = {
         classTo: 'form-group',
         errorClass: 'has-danger',
@@ -62,12 +62,11 @@
     var ALLOWED_ATTRIBUTES = ["required", "min", "max", 'minlength', 'maxlength', 'pattern'];
     var EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    var MESSAGE_REGEX = /-message(?:-([a-z]{2}(?:_[A-Z]{2})?))?/; // matches, -message, -message-en, -message-en_US
-    var currentLocale = 'en';
     var validators = {};
 
     var _ = function _(name, validator) {
         validator.name = name;
+        if (!validator.msg) validator.msg = lang[name];
         if (validator.priority === undefined) validator.priority = 1;
         validators[name] = validator;
     };
@@ -76,7 +75,7 @@
             return true;
         }, priority: 0 });
     _('required', { fn: function fn(val) {
-            return this.type === 'radio' || this.type === 'checkbox' ? groupedElemCount(this) : val !== undefined && val.trim() !== '';
+            return this.type === 'radio' || this.type === 'checkbox' ? groupedElemCount(this) : val !== undefined && val !== '';
         }, priority: 99, halt: true });
     _('email', { fn: function fn(val) {
             return !val || EMAIL_REGEX.test(val);
@@ -102,9 +101,6 @@
     _('pattern', { fn: function fn(val, pattern) {
             var m = pattern.match(new RegExp('^/(.*?)/([gimy]*)$'));return !val || new RegExp(m[1], m[2]).test(val);
         } });
-    _('equals', { fn: function fn(val, otherFieldSelector) {
-            var other = document.querySelector(otherFieldSelector);return other && (!val && !other.value || other.value === val);
-        } });
 
     function Pristine(form, config, live) {
 
@@ -128,11 +124,8 @@
                 [].forEach.call(input.attributes, function (attr) {
                     if (/^data-pristine-/.test(attr.name)) {
                         var name = attr.name.substr(14);
-                        var messageMatch = name.match(MESSAGE_REGEX);
-                        if (messageMatch !== null) {
-                            var locale = messageMatch[1] === undefined ? 'en' : messageMatch[1];
-                            if (!messages.hasOwnProperty(locale)) messages[locale] = {};
-                            messages[locale][name.slice(0, name.length - messageMatch[0].length)] = attr.value;
+                        if (name.endsWith('-message')) {
+                            messages[name.slice(0, name.length - 8)] = attr.value;
                             return;
                         }
                         if (name === 'type') name = attr.value;
@@ -161,7 +154,7 @@
             if (validator) {
                 fns.push(validator);
                 if (value) {
-                    var valueParams = name === "pattern" ? [value] : value.split(',');
+                    var valueParams = value.split(',');
                     valueParams.unshift(null); // placeholder for input's value
                     params[name] = valueParams;
                 }
@@ -240,19 +233,11 @@
                 if (!validator.fn.apply(field.input, params)) {
                     valid = false;
 
-                    if (typeof validator.msg === "function") {
+                    if (isFunction(validator.msg)) {
                         errors.push(validator.msg(field.input.value, params));
-                    } else if (typeof validator.msg === "string") {
-                        errors.push(tmpl.apply(validator.msg, params));
-                    } else if (validator.msg === Object(validator.msg) && validator.msg[currentLocale]) {
-                        // typeof generates unnecessary babel code
-                        errors.push(tmpl.apply(validator.msg[currentLocale], params));
-                    } else if (field.messages[currentLocale] && field.messages[currentLocale][validator.name]) {
-                        errors.push(tmpl.apply(field.messages[currentLocale][validator.name], params));
-                    } else if (lang[currentLocale] && lang[currentLocale][validator.name]) {
-                        errors.push(tmpl.apply(lang[currentLocale][validator.name], params));
                     } else {
-                        errors.push(tmpl.apply(lang[currentLocale].default, params));
+                        var error = field.messages[validator.name] || validator.msg;
+                        errors.push(tmpl.apply(error, params));
                     }
 
                     if (validator.halt === true) {
@@ -265,7 +250,7 @@
         }
 
         /***
-         * Add a validator to a specific dom element in a form
+         *
          * @param elem => The dom element where the validator is applied to
          * @param fn => validator function
          * @param msg => message to show when validation fails. Supports templating. ${0} for the input's value, ${1} and
@@ -320,20 +305,11 @@
             var errorClassElement = errorElements[0],
                 errorTextElement = errorElements[1];
 
-            var input = field.input;
-
-            var inputId = input.id || Math.floor(new Date().valueOf() * Math.random());
-            var errorId = 'error-' + inputId;
-
             if (errorClassElement) {
                 errorClassElement.classList.remove(self.config.successClass);
                 errorClassElement.classList.add(self.config.errorClass);
-                input.setAttribute('aria-describedby', errorId);
-                input.setAttribute('aria-invalid', 'true');
             }
             if (errorTextElement) {
-                errorTextElement.setAttribute('id', errorId);
-                errorTextElement.setAttribute('role', 'alert');
                 errorTextElement.innerHTML = field.errors.join('<br/>');
                 errorTextElement.style.display = errorTextElement.pristineDisplay || '';
             }
@@ -354,19 +330,12 @@
             var errorElements = _getErrorElements(field);
             var errorClassElement = errorElements[0],
                 errorTextElement = errorElements[1];
-            var input = field.input;
-
-
             if (errorClassElement) {
                 // IE > 9 doesn't support multiple class removal
                 errorClassElement.classList.remove(self.config.errorClass);
                 errorClassElement.classList.remove(self.config.successClass);
-                input.removeAttribute('aria-describedby');
-                input.removeAttribute('aria-invalid');
             }
             if (errorTextElement) {
-                errorTextElement.removeAttribute('id');
-                errorTextElement.removeAttribute('role');
                 errorTextElement.innerHTML = '';
                 errorTextElement.style.display = 'none';
             }
@@ -423,18 +392,6 @@
      */
     Pristine.addValidator = function (name, fn, msg, priority, halt) {
         _(name, { fn: fn, msg: msg, priority: priority, halt: halt });
-    };
-
-    Pristine.addMessages = function (locale, messages) {
-        var langObj = lang.hasOwnProperty(locale) ? lang[locale] : lang[locale] = {};
-
-        Object.keys(messages).forEach(function (key, index) {
-            langObj[key] = messages[key];
-        });
-    };
-
-    Pristine.setLocale = function (locale) {
-        currentLocale = locale;
     };
 
     return Pristine;
