@@ -23,13 +23,13 @@ const resetValuesScale = () => {
   scaleValue.value = `${scaleOptions.BY_DEFAULT}%`;
 };
 
-const getZoomValue = () => {
+const getZoom = () => {
   const currentValue = scaleValue.value;
   return Number(removeLastCharacter(currentValue));
 };
 
 const setScaleSmaller = () => {
-  const numberValue = getZoomValue();
+  const numberValue = getZoom();
   if(numberValue > scaleOptions.MIN) {
     const newValue = numberValue - scaleOptions.STEP;
     setValuesScale(newValue);
@@ -37,7 +37,7 @@ const setScaleSmaller = () => {
 };
 
 const setScaleBigger = () => {
-  const numberValue = getZoomValue();
+  const numberValue = getZoom();
   if(numberValue < scaleOptions.MAX) {
     const newValue = numberValue + scaleOptions.STEP;
     setValuesScale(newValue);
@@ -54,14 +54,12 @@ const removeListeners = () => {
   scaleBigger.removeEventListener('click', setScaleBigger);
 };
 
-export function setScale() {
+export const initScale = () => {
   resetValuesScale();
   addListeners();
-}
+};
 
 export const resetScale = () => {
   resetValuesScale();
   removeListeners();
 };
-
-setScale();

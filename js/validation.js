@@ -31,10 +31,12 @@ const checkMaxQuantity = () => checkLength(hashtagInput.value.split(' ').filter(
 const constNoRepetitions = () => checkRepeats(hashtagInput.value.split(' ').filter(Boolean));
 const checkMaxLengthComment = () => checkLength(commentInput.value, COMMENT_MAX_LENGTH);
 
-pristine.addValidator(hashtagInput, checkHasHash, MESSAGES.hasHash);
-pristine.addValidator(hashtagInput, checkMaxQuantity, MESSAGES.maxQuantity);
-pristine.addValidator(hashtagInput, constNoRepetitions, MESSAGES.noRepetitions);
-pristine.addValidator(commentInput, checkMaxLengthComment, MESSAGES.maxLengthComment);
+export const initValidation = () => {
+  pristine.addValidator(hashtagInput, checkHasHash, MESSAGES.hasHash);
+  pristine.addValidator(hashtagInput, checkMaxQuantity, MESSAGES.maxQuantity);
+  pristine.addValidator(hashtagInput, constNoRepetitions, MESSAGES.noRepetitions);
+  pristine.addValidator(commentInput, checkMaxLengthComment, MESSAGES.maxLengthComment);
+};
 
 export const validate = () => pristine.validate();
 export const reset = () => pristine.reset();
