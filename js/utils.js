@@ -7,36 +7,6 @@ export const checkRepeats = (array) => {
   return arrayNoRepeats.size === toUpper.length;
 };
 
-//Функция для проверки, является ли строка палиндромом.
-export const isPalindrome = (text) => {
-  const prepareText = text.toLowerCase().replace(/[^a-zа-яё]/gi, '');
-  const reverseText = prepareText.split('').reverse().join('');
-  return reverseText === prepareText;
-};
-
-//Функция извлечения цифр из строки
-export const findNumbers = (value) => {
-  const inputValue = String(value);
-  const digits = inputValue.replace(/[^0-9]/g, '');
-  if(digits.length !== 0) {
-    return parseInt(digits, 10);
-  }
-  return NaN;
-};
-
-//Функция установки минимальной длины строки
-export const setMinLengthString = (text, minLength, addCharacters) => {
-  const inputText = text.toString();
-  const inputAddCharacters = addCharacters.toString();
-  const requiredPad = minLength - inputText.length;
-  if(requiredPad > 0) {
-    return inputAddCharacters.slice(0, requiredPad % inputAddCharacters.length)
-      + inputAddCharacters.repeat(requiredPad / inputAddCharacters.length)
-      + inputText;
-  }
-  return inputText;
-};
-
 //Функция получения уникального идентификатора (автоинкремент)
 export const createIdGenerator = (start = 0) => {
   let lastGeneratedId = start;
@@ -79,3 +49,5 @@ export const isEscapeKey = (evt) => evt.key === 'Escape';
 
 //Функция проверки нажатой клавиши Enter
 export const isEnterKey = (evt) => evt.key === 'Enter';
+
+export const removeLastCharacter = (string) => string ? string.slice(0, -1) : string;
