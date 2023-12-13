@@ -5,7 +5,6 @@ const body = document.querySelector('body');
 const itemOpenDialogElement = document.querySelector('.big-picture');
 const itemCloseDialogElement = document.querySelector('.big-picture__cancel');
 
-
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
@@ -27,12 +26,14 @@ export const showPopup = (itemData) => {
   renderItemDetails(itemData, itemOpenDialogElement);
 };
 
-itemCloseDialogElement.addEventListener('click', () => {
-  hidePopup();
-});
-
-itemCloseDialogElement.addEventListener('keydown', (evt) => {
-  if (isEnterKey(evt)) {
+export const initFormBigItem = () => {
+  itemCloseDialogElement.addEventListener('click', () => {
     hidePopup();
-  }
-});
+  });
+
+  itemCloseDialogElement.addEventListener('keydown', (evt) => {
+    if (isEnterKey(evt)) {
+      hidePopup();
+    }
+  });
+};

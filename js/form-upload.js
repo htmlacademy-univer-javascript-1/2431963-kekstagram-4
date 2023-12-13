@@ -1,7 +1,17 @@
 import {validate, reset} from './validation.js';
 import {isEnterKey, isEscapeKey} from './utils.js';
-import {setScale, resetScale} from './scale.js';
-import {resetSlider} from './slider.js';
+import {initScale, resetScale} from './scale.js';
+import {initSlider, resetSlider} from './slider.js';
+import {sendData} from './api.js';
+import {openMessage, checkTypeMessage} from './message.js';
+
+const SubmitButtonText = {
+  IDLE: 'Опубликовать',
+  SENDING: 'Публикую...'
+};
+
+const SUCCESS_TYPE_MESSAGE = 'success';
+const ERROR_TYPE_MESSAGE = 'error';
 
 const uploadButton = document.querySelector('#upload-file');
 const modalPopup = document.querySelector('.img-upload__overlay');
@@ -31,7 +41,7 @@ const clearInputs = () => {
   commentInput.value = '';
 };
 
-const hidePopup = () => {
+export const hidePopup = () => {
   modalPopup.classList.add('hidden');
   document.body.classList.remove('modal-open');
   resetScale();
@@ -42,7 +52,7 @@ const hidePopup = () => {
 };
 
 const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
+  if (isEscapeKey(evt) && !checkTypeMessage()) {
     evt.preventDefault();
     hidePopup();
   }
@@ -78,41 +88,44 @@ function deleteListeners() {
   commentInput.removeEventListener('blur', onInputsBlur);
 }
 
-const disabledSubmitButton = (status) => {
-  submitButton.disabled = status;
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = SubmitButtonText.SENDING;
 };
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = SubmitButtonText.IDLE;
+};
+
 
 const showPopup = () => {
   modalPopup.classList.remove('hidden');
   document.body.classList.add('modal-open');
   addListeners();
-  setScale();
+  initScale();
+  initSlider();
 };
 
-const submitForm = () => {
+export const initFormUpload = (startValidator, onSuccess) => {
+  startValidator();
   uploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
+    const isValid = validate();
+    if(isValid) {
+      blockSubmitButton();
+      sendData(new FormData(evt.target))
+        .then(onSuccess)
+        .then(() => openMessage(SUCCESS_TYPE_MESSAGE))
+        .catch(
+          () => {
+            openMessage(ERROR_TYPE_MESSAGE);
+          }
+        )
+        .finally(unblockSubmitButton);
+    }
+  });
+  uploadButton.addEventListener('change', () => {
+    showPopup();
   });
 };
-
-uploadButton.addEventListener('change', () => {
-  showPopup();
-});
-
-hashtagInput.addEventListener('input', () => {
-  if(validate()) {
-    disabledSubmitButton(false);
-  } else {
-    disabledSubmitButton(true);
-  }
-});
-
-commentInput.addEventListener('input', () => {
-  if(validate()) {
-    disabledSubmitButton(false);
-  } else {
-    disabledSubmitButton(true);
-  }
-});
-
-submitForm();
