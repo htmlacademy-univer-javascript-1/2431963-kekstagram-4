@@ -9,7 +9,7 @@ const SubmitButtonText = {
   IDLE: 'Опубликовать',
   SENDING: 'Публикую...'
 };
-
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 const SUCCESS_TYPE_MESSAGE = 'success';
 const ERROR_TYPE_MESSAGE = 'error';
 
@@ -20,6 +20,8 @@ const uploadForm = document.querySelector('#upload-select-image');
 const hashtagInput = uploadForm.querySelector('[name="hashtags"]');
 const commentInput = uploadForm.querySelector('[name="description"]');
 const submitButton = document.querySelector('.img-upload__submit');
+const imagePreview = document.querySelector('.img-upload__preview img');
+const effectsPreview = document.querySelectorAll('.effects__preview');
 
 const disableEsc = (evt) => {
   if (isEscapeKey(evt)) {
@@ -126,6 +128,15 @@ export const initFormUpload = (startValidator, onSuccess) => {
     }
   });
   uploadButton.addEventListener('change', () => {
+    const file = uploadButton.files[0];
+    const fileName = file.name.toLowerCase();
+    const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+    if (matches) {
+      imagePreview.src = URL.createObjectURL(file);
+      effectsPreview.forEach((effect) => {
+        effect.style.backgroundImage = `url('${URL.createObjectURL(file)}')`;
+      });
+    }
     showPopup();
   });
 };

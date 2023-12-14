@@ -1,15 +1,29 @@
 import {getData} from './api.js';
 import {initGallery} from './gallery.js';
 import {hidePopup, initFormUpload} from './form-upload.js';
-import {showAlert} from './utils.js';
+import {debounce, showAlert} from './utils.js';
 import {initValidation} from './validation.js';
+import {changeFilter, showFilter} from './filter.js';
+import {setState, getState} from './state.js';
 
-const GALLERY_ITEM_COUNT = 25;
+const RENDER_DELAY = 500;
 
 getData()
   .then((photos) => {
-    initGallery(photos.slice(0, GALLERY_ITEM_COUNT));
+    setState(photos);
   })
+  .then(() => {
+    initGallery(getState());
+    changeFilter(debounce(
+      () => initGallery(getState()),
+      RENDER_DELAY,
+    ));
+  })
+  .then(
+    () => {
+      showFilter();
+    }
+  )
   .catch((err) => {
     showAlert(err.message);
   });
