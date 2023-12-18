@@ -3,9 +3,7 @@ import {filterRandom, sortByMostDiscussed} from './filter.js';
 
 const itemsContainer = document.querySelector('.pictures');
 //Заготовка элемента для заполнения данными
-const itemTemplate = document.querySelector('#picture')
-  .content
-  .querySelector('.picture');
+const itemTemplate = document.querySelector('#picture').content.querySelector('.picture');
 //Блок с кнопками фильтра
 const filter = document.querySelector('.img-filters');
 
