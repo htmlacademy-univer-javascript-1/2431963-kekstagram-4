@@ -1,4 +1,4 @@
-let currentData = null;
+let currentData = {};
 export const setState = (data) => {
   currentData = data;
 };

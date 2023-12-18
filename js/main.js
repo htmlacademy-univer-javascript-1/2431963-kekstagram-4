@@ -14,19 +14,11 @@ getData()
   })
   .then(() => {
     initGallery(getState());
-    changeFilter(debounce(
-      () => initGallery(getState()),
-      RENDER_DELAY,
-    ));
+    changeFilter(debounce(() => initGallery(getState()), RENDER_DELAY));
+    showFilter();
   })
-  .then(
-    () => {
-      showFilter();
-    }
-  )
   .catch((err) => {
     showAlert(err.message);
   });
 
 initFormUpload(initValidation, hidePopup);
-

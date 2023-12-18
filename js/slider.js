@@ -53,6 +53,7 @@ const sliderElement = document.querySelector('.effect-level__slider');
 const sliderContainerElement = document.querySelector('.img-upload__effect-level');
 const valueElement = document.querySelector('.effect-level__value');
 const fieldsetElement = document.querySelector('.img-upload__effects');
+const defaultEffectRadio = document.querySelector('.effects__radio');
 const defaultEffect = EFFECTS.find((effect) => effect.name === 'none');
 
 const showSlider = () => {
@@ -81,8 +82,13 @@ const setSlider = (name, choice) => {
 export const resetSlider = () => {
   sliderElement.noUiSlider.set(defaultEffect.max);
   imagePreview.style.filter = '';
-  imagePreview.classList.add('effects__preview--none');
+  imagePreview.className = 'effects__preview--none';
   valueElement.value = 100;
+  defaultEffectRadio.checked = true;
+};
+
+export const destroySlider = () => {
+  sliderElement.noUiSlider.destroy();
 };
 
 export const initSlider = () => {
