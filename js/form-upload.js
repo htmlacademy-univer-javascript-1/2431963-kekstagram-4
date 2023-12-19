@@ -3,7 +3,7 @@ import {isEnterKey, isEscapeKey} from './utils.js';
 import {initScale, resetScale} from './scale.js';
 import {destroySlider, initSlider, resetSlider} from './slider.js';
 import {sendData} from './api.js';
-import {openMessage, checkTypeMessage} from './message.js';
+import {openMessageBox, checkTypeMessage} from './message.js';
 
 const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 const SUCCESS_TYPE_MESSAGE = 'success';
@@ -118,10 +118,10 @@ export const initFormUpload = (onStartValidator, onSuccessUpload) => {
       blockSubmitButton();
       sendData(new FormData(evt.target))
         .then(onSuccessUpload)
-        .then(() => openMessage(SUCCESS_TYPE_MESSAGE))
+        .then(() => openMessageBox(SUCCESS_TYPE_MESSAGE))
         .catch(
           () => {
-            openMessage(ERROR_TYPE_MESSAGE);
+            openMessageBox(ERROR_TYPE_MESSAGE);
           }
         )
         .finally(unblockSubmitButton);

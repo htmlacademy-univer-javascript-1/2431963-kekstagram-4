@@ -4,7 +4,6 @@ const AVATAR_SIZE = 35;
 const commentList = document.querySelector('.social__comments');
 const counterRenderedCommentsElement = document.querySelector('.comments-current');
 
-//Создать комментарий
 const createComment = (comment) => {
   const {avatar, name, message} = comment;
 
@@ -28,20 +27,27 @@ const createComment = (comment) => {
   return commentLiElement;
 };
 
-//Добавить комментарий в список
 const addComment = (comment) => {
   commentList.append(createComment(comment));
 };
 
-//Вычислить счетчик загруженных комментариев
 const calcCounterLoadedComments = (marker, length) => marker > length ? length : marker;
 
-//Скрыть кнопку загрузки скрытых комментариев (Загрузить еще)
-const hideLoadMoreButton = () => {
-  document.querySelector('.comments-loader').classList.add('hidden');
+const createLoadMoreButton = () => {
+  const loadMoreButton = document.createElement('button');
+  loadMoreButton.setAttribute('type', 'button');
+  loadMoreButton.classList.add('social__comments-loader');
+  loadMoreButton.classList.add('comments-loader');
+  loadMoreButton.textContent = 'Загрузить еще';
+  commentList.after(loadMoreButton);
 };
 
-//Фунция обратного вызова для обработки загрузки скрытых комментариев
+const hideLoadMoreButton = () => {
+  if (document.querySelector('.comments-loader') !== null) {
+    document.querySelector('.comments-loader').classList.add('hidden');
+  }
+};
+
 const onLoadMore = (items) => (evt) => {
   evt.preventDefault();
 
@@ -58,7 +64,6 @@ const onLoadMore = (items) => (evt) => {
   }
 };
 
-//Отобразить комментарии, загруженные по умолчанию
 const renderVisibleComments = (comments) => {
   comments.forEach((comment) => {
     addComment(comment);
@@ -67,16 +72,17 @@ const renderVisibleComments = (comments) => {
   counterRenderedCommentsElement.textContent = comments.length;
 };
 
-//Отобразить скрытые комментарии
 const renderInvisibleComments = (comments) => {
   comments.slice(0, COMMENT_COUNT).forEach((comment) => {
     addComment(comment);
   });
   counterRenderedCommentsElement.textContent = calcCounterLoadedComments(commentList.childNodes.length, comments.length);
+  if (document.querySelector('.comments-loader') === null) {
+    createLoadMoreButton();
+  }
   document.querySelector('.comments-loader').addEventListener('click', onLoadMore(comments));
 };
 
-//Отобразить комментарии
 const renderComments = (comments) => {
   commentList.innerHTML = '';
 
@@ -87,7 +93,6 @@ const renderComments = (comments) => {
   }
 };
 
-//Отобразить полную информацию о фотографии
 export const renderItemDetails = (item, outputContainer) => {
   const {comments, description, likes, url} = item;
 

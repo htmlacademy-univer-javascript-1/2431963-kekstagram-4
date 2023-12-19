@@ -1,6 +1,6 @@
 const ALERT_SHOW_TIME = 5000;
 
-const ALERT_STYLES = {
+const alertStyles = {
   zIndex : '100',
   position : 'absolute',
   left : '0',
@@ -11,32 +11,26 @@ const ALERT_STYLES = {
   lineHeight : '36px',
   textAlign : 'center',
   backgroundColor : '#232321',
-  color: '#ffffff'
+  color: '#ffffff',
 };
 
-//Функция для проверки длины строки.
 export const checkLength = (array, maxLength) => array.length <= maxLength;
 
-// Функция для проверки на уникальные значения в массиве
 export const checkRepeats = (array) => {
   const itemsInUpperCase = array.map((item) => item.toUpperCase());
   const arrayNoRepeats = new Set(itemsInUpperCase);
   return arrayNoRepeats.size === itemsInUpperCase.length;
 };
 
-//Функция проверки нажатой клавиши Esc
 export const isEscapeKey = (evt) => evt.key === 'Escape';
 
-//Функция проверки нажатой клавиши Enter
 export const isEnterKey = (evt) => evt.key === 'Enter';
 
-//Функция для удаления последнего символа в строке
 export const removeLastCharacter = (string) => string ? string.slice(0, -1) : string;
 
-// Функция для вывода окна с сообщением
 export const showAlert = (message) => {
   const alertContainer = document.createElement('div');
-  Object.assign(alertContainer.style, ALERT_STYLES);
+  Object.assign(alertContainer.style, alertStyles);
   alertContainer.textContent = message;
   document.body.append(alertContainer);
 
