@@ -19,9 +19,9 @@ export const checkLength = (array, maxLength) => array.length <= maxLength;
 
 // Функция для проверки на уникальные значения в массиве
 export const checkRepeats = (array) => {
-  const toUpper = array.map((item) => item.toUpperCase());
-  const arrayNoRepeats = new Set(toUpper);
-  return arrayNoRepeats.size === toUpper.length;
+  const itemsInUpperCase = array.map((item) => item.toUpperCase());
+  const arrayNoRepeats = new Set(itemsInUpperCase);
+  return arrayNoRepeats.size === itemsInUpperCase.length;
 };
 
 //Функция проверки нажатой клавиши Esc
@@ -45,12 +45,11 @@ export const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-export function debounce (callback, timeoutDelay = 500) {
+export const debounce = (callback, timeoutDelay = 500) => {
   let timeoutId;
 
   return (...rest) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
-}
-
+};

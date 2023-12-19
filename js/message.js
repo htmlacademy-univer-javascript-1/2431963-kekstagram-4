@@ -4,32 +4,32 @@ import {isEscapeKey} from './utils.js';
 const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
 
-//Находит элемент с классом или success или error, нас странице он всегда один
+//Находит элемент с классом success или error, на странице он всегда один
 export const checkTypeMessage = () => document.querySelector('.success, .error');
 
+//Обработка ECS
+const onMessageEscapeKeydown = (evt) => {
+  if (isEscapeKey(evt) && checkTypeMessage()) {
+    evt.preventDefault();
+    closeMessage();
+  }
+};
+
+//Обработка клика вне информационного окна
+const onMessageOutsideClick = (evt) => {
+  const messageElement = checkTypeMessage();
+  if (evt.target === messageElement) {
+    closeMessage();
+  }
+};
+
 //Функция закрытия окна, удаляем обработчики и сам эелемент
-const closeMessage = () => {
+function closeMessage () {
   document.removeEventListener('keydown', onMessageEscapeKeydown);
   document.removeEventListener('click', onMessageOutsideClick);
   const messageElement = checkTypeMessage();
   if (messageElement) {
     messageElement.remove();
-  }
-};
-
-//Обработка ECS
-function onMessageEscapeKeydown (evt) {
-  if (isEscapeKey(evt) && checkTypeMessage()) {
-    evt.preventDefault();
-    closeMessage();
-  }
-}
-
-//Обработка клика вне информационного окна
-function onMessageOutsideClick (evt) {
-  const messageElement = checkTypeMessage();
-  if (evt.target === messageElement) {
-    closeMessage();
   }
 }
 

@@ -1,21 +1,22 @@
-import {validate, reset} from './validation.js';
+import {validateValues, resetValidator} from './validation.js';
 import {isEnterKey, isEscapeKey} from './utils.js';
 import {initScale, resetScale} from './scale.js';
 import {destroySlider, initSlider, resetSlider} from './slider.js';
 import {sendData} from './api.js';
 import {openMessage, checkTypeMessage} from './message.js';
 
-const SubmitButtonText = {
-  IDLE: 'Опубликовать',
-  SENDING: 'Публикую...'
-};
 const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 const SUCCESS_TYPE_MESSAGE = 'success';
 const ERROR_TYPE_MESSAGE = 'error';
 
+const SubmitButtonText = {
+  IDLE: 'Опубликовать',
+  SENDING: 'Публикую...'
+};
+
 const uploadButton = document.querySelector('#upload-file');
-const modalPopup = document.querySelector('.img-upload__overlay');
-const closePopup = document.querySelector('#upload-cancel');
+const modalForm = document.querySelector('.img-upload__overlay');
+const closeFormButton = document.querySelector('#upload-cancel');
 const uploadForm = document.querySelector('#upload-select-image');
 const hashtagInput = uploadForm.querySelector('[name="hashtags"]');
 const commentInput = uploadForm.querySelector('[name="description"]');
@@ -23,18 +24,18 @@ const submitButton = document.querySelector('.img-upload__submit');
 const imagePreview = document.querySelector('.img-upload__preview img');
 const effectsPreview = document.querySelectorAll('.effects__preview');
 
-const disableEsc = (evt) => {
+const onInputEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.stopPropagation();
   }
 };
 
-const onInputsFocus = (evt) => {
-  evt.target.addEventListener('keydown', disableEsc);
+const onInputFocus = (evt) => {
+  evt.target.addEventListener('keydown', onInputEscKeydown);
 };
 
-const onInputsBlur = (evt) => {
-  evt.target.removeEventListener('keydown', disableEsc);
+const onInputBlur = (evt) => {
+  evt.target.removeEventListener('keydown', onInputEscKeydown);
 };
 
 const clearInputs = () => {
@@ -43,52 +44,52 @@ const clearInputs = () => {
   commentInput.value = '';
 };
 
-export const hidePopup = () => {
-  modalPopup.classList.add('hidden');
+export const hideFormUpload = () => {
+  modalForm.classList.add('hidden');
   document.body.classList.remove('modal-open');
   resetScale();
   resetSlider();
   destroySlider();
   deleteListeners();
   clearInputs();
-  reset();
+  resetValidator();
 };
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt) && !checkTypeMessage()) {
     evt.preventDefault();
-    hidePopup();
+    hideFormUpload();
   }
 };
 
 const onButtonCloseClick = () => {
-  hidePopup();
+  hideFormUpload();
 };
 
 const onButtonCloseEnter = (evt) => {
   if (isEnterKey(evt)) {
-    hidePopup();
+    hideFormUpload();
   }
 };
 
 const addListeners = () => {
   document.addEventListener('keydown', onDocumentKeydown);
-  closePopup.addEventListener('click', onButtonCloseClick);
-  closePopup.addEventListener('keydown', onButtonCloseEnter);
-  hashtagInput.addEventListener('focus', onInputsFocus);
-  hashtagInput.addEventListener('blur', onInputsBlur);
-  commentInput.addEventListener('focus', onInputsFocus);
-  commentInput.addEventListener('blur', onInputsBlur);
+  closeFormButton.addEventListener('click', onButtonCloseClick);
+  closeFormButton.addEventListener('keydown', onButtonCloseEnter);
+  hashtagInput.addEventListener('focus', onInputFocus);
+  hashtagInput.addEventListener('blur', onInputBlur);
+  commentInput.addEventListener('focus', onInputFocus);
+  commentInput.addEventListener('blur', onInputBlur);
 };
 
 function deleteListeners() {
   document.removeEventListener('keydown', onDocumentKeydown);
-  closePopup.removeEventListener('click', onButtonCloseClick);
-  closePopup.removeEventListener('keydown', onButtonCloseEnter);
-  hashtagInput.removeEventListener('focus', onInputsFocus);
-  hashtagInput.removeEventListener('blur', onInputsBlur);
-  commentInput.removeEventListener('focus', onInputsFocus);
-  commentInput.removeEventListener('blur', onInputsBlur);
+  closeFormButton.removeEventListener('click', onButtonCloseClick);
+  closeFormButton.removeEventListener('keydown', onButtonCloseEnter);
+  hashtagInput.removeEventListener('focus', onInputFocus);
+  hashtagInput.removeEventListener('blur', onInputBlur);
+  commentInput.removeEventListener('focus', onInputFocus);
+  commentInput.removeEventListener('blur', onInputBlur);
 }
 
 const blockSubmitButton = () => {
@@ -101,24 +102,22 @@ const unblockSubmitButton = () => {
   submitButton.textContent = SubmitButtonText.IDLE;
 };
 
-
-const showPopup = () => {
-  modalPopup.classList.remove('hidden');
+const showFormUpload = () => {
+  modalForm.classList.remove('hidden');
   document.body.classList.add('modal-open');
   addListeners();
   initScale();
   initSlider();
 };
 
-export const initFormUpload = (startValidator, onSuccess) => {
-  startValidator();
+export const initFormUpload = (onStartValidator, onSuccessUpload) => {
+  onStartValidator();
   uploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
-    const isValid = validate();
-    if(isValid) {
+    if(validateValues()) {
       blockSubmitButton();
       sendData(new FormData(evt.target))
-        .then(onSuccess)
+        .then(onSuccessUpload)
         .then(() => openMessage(SUCCESS_TYPE_MESSAGE))
         .catch(
           () => {
@@ -131,13 +130,13 @@ export const initFormUpload = (startValidator, onSuccess) => {
   uploadButton.addEventListener('change', () => {
     const file = uploadButton.files[0];
     const fileName = file.name.toLowerCase();
-    const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+    const matches = FILE_TYPES.some((extension) => fileName.endsWith(extension));
     if (matches) {
       imagePreview.src = URL.createObjectURL(file);
       effectsPreview.forEach((effect) => {
         effect.style.backgroundImage = `url('${URL.createObjectURL(file)}')`;
       });
-      showPopup();
+      showFormUpload();
     }
   });
 };

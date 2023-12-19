@@ -1,6 +1,6 @@
 import {removeLastCharacter} from './utils.js';
 
-const scaleOptions = {
+const ScaleOptions = {
   MIN: 25,
   MAX: 100,
   BY_DEFAULT: 100,
@@ -13,34 +13,34 @@ const scaleBigger = scaleControls.querySelector('.scale__control--bigger');
 const scaleValue = scaleControls.querySelector('.scale__control--value');
 const imagePreview = document.querySelector('.img-upload__preview img');
 
-const setValuesScale = (transform) => {
-  scaleValue.value = `${transform}%`;
-  imagePreview.style.transform = `scale(${transform / 100})`;
+const setValuesScale = (scale) => {
+  scaleValue.value = `${scale}%`;
+  imagePreview.style.transform = `scale(${scale / 100})`;
 };
 
 const resetValuesScale = () => {
   imagePreview.style.transform = '';
-  scaleValue.value = `${scaleOptions.BY_DEFAULT}%`;
+  scaleValue.value = `${ScaleOptions.BY_DEFAULT}%`;
 };
 
-const getZoom = () => {
+const getScale = () => {
   const currentValue = scaleValue.value;
   return Number(removeLastCharacter(currentValue));
 };
 
 const setScaleSmaller = () => {
-  const numberValue = getZoom();
-  if(numberValue > scaleOptions.MIN) {
-    const newValue = numberValue - scaleOptions.STEP;
-    setValuesScale(newValue);
+  const scale = getScale();
+  if(scale > ScaleOptions.MIN) {
+    const newScale = scale - ScaleOptions.STEP;
+    setValuesScale(newScale);
   }
 };
 
 const setScaleBigger = () => {
-  const numberValue = getZoom();
-  if(numberValue < scaleOptions.MAX) {
-    const newValue = numberValue + scaleOptions.STEP;
-    setValuesScale(newValue);
+  const scale = getScale();
+  if(scale < ScaleOptions.MAX) {
+    const newScale = scale + ScaleOptions.STEP;
+    setValuesScale(newScale);
   }
 };
 

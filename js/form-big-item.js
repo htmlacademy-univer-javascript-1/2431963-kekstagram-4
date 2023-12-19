@@ -2,11 +2,11 @@ import {renderItemDetails} from './big-item.js';
 import {isEscapeKey, isEnterKey} from './utils.js';
 
 const body = document.querySelector('body');
-const itemOpenDialogElement = document.querySelector('.big-picture');
-const itemCloseDialogElement = document.querySelector('.big-picture__cancel');
+const openDialogElement = document.querySelector('.big-picture');
+const closeDialogElement = document.querySelector('.big-picture__cancel');
 const commentList = document.querySelector('.social__comments');
 
-const createMoreButton = () => {
+const createLoadMoreButton = () => {
   const loadMoreButton = document.createElement('button');
   loadMoreButton.setAttribute('type', 'button');
   loadMoreButton.classList.add('social__comments-loader');
@@ -18,35 +18,33 @@ const createMoreButton = () => {
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    hidePopup();
+    hideFormBigItem();
   }
 };
 
-function hidePopup () {
-  itemOpenDialogElement.classList.add('hidden');
+function hideFormBigItem () {
+  openDialogElement.classList.add('hidden');
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
   document.querySelector('.comments-loader').remove();
 }
 
-export const showPopup = (itemData) => {
-  itemOpenDialogElement.classList.remove('hidden');
+export const showFormBigItem = (item) => {
+  openDialogElement.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
-  if(document.querySelector('.comments-loader') === null) {
-    createMoreButton();
-  }
-  renderItemDetails(itemData, itemOpenDialogElement);
+  createLoadMoreButton();
+  renderItemDetails(item, openDialogElement);
 };
 
 export const initFormBigItem = () => {
-  itemCloseDialogElement.addEventListener('click', () => {
-    hidePopup();
+  closeDialogElement.addEventListener('click', () => {
+    hideFormBigItem();
   });
 
-  itemCloseDialogElement.addEventListener('keydown', (evt) => {
+  closeDialogElement.addEventListener('keydown', (evt) => {
     if (isEnterKey(evt)) {
-      hidePopup();
+      hideFormBigItem();
     }
   });
 };
