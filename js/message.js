@@ -1,11 +1,11 @@
 import {isEscapeKey} from './utils.js';
 
-const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
-const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
+const successMessageTemplateElement = document.querySelector('#success').content.querySelector('.success');
+const errorMessageTemplateElement = document.querySelector('#error').content.querySelector('.error');
 
 export const checkTypeMessage = () => document.querySelector('.success, .error');
 
-const onMessageEscapeKeydown = (evt) => {
+const onMessageEscKeydown = (evt) => {
   if (isEscapeKey(evt) && checkTypeMessage()) {
     evt.preventDefault();
     closeMessageBox();
@@ -20,8 +20,9 @@ const onMessageOutsideClick = (evt) => {
 };
 
 function closeMessageBox () {
-  document.removeEventListener('keydown', onMessageEscapeKeydown);
+  document.removeEventListener('keydown', onMessageEscKeydown);
   document.removeEventListener('click', onMessageOutsideClick);
+
   const messageElement = checkTypeMessage();
   if (messageElement) {
     messageElement.remove();
@@ -29,7 +30,7 @@ function closeMessageBox () {
 }
 
 export const openMessageBox = (typeMessage) => {
-  const message = typeMessage === 'success' ? successMessageTemplate.cloneNode(true) : errorMessageTemplate.cloneNode(true);
+  const message = typeMessage === 'success' ? successMessageTemplateElement.cloneNode(true) : errorMessageTemplateElement.cloneNode(true);
   const messageButton = message.querySelector(`.${typeMessage}__button`);
   document.body.append(message);
 
@@ -37,6 +38,6 @@ export const openMessageBox = (typeMessage) => {
     closeMessageBox();
   });
 
-  document.addEventListener('keydown', onMessageEscapeKeydown);
+  document.addEventListener('keydown', onMessageEscKeydown);
   document.addEventListener('click', onMessageOutsideClick);
 };

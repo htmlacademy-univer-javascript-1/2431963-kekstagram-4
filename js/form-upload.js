@@ -14,15 +14,15 @@ const SubmitButtonText = {
   SENDING: 'Публикую...'
 };
 
-const uploadButton = document.querySelector('#upload-file');
-const modalForm = document.querySelector('.img-upload__overlay');
-const closeFormButton = document.querySelector('#upload-cancel');
-const uploadForm = document.querySelector('#upload-select-image');
-const hashtagInput = uploadForm.querySelector('[name="hashtags"]');
-const commentInput = uploadForm.querySelector('[name="description"]');
-const submitButton = document.querySelector('.img-upload__submit');
-const imagePreview = document.querySelector('.img-upload__preview img');
-const effectsPreview = document.querySelectorAll('.effects__preview');
+const uploadButtonElement = document.querySelector('#upload-file');
+const modalFormElement = document.querySelector('.img-upload__overlay');
+const closeFormButtonElement = document.querySelector('#upload-cancel');
+const uploadFormElement = document.querySelector('#upload-select-image');
+const hashtagInputElement = uploadFormElement.querySelector('[name="hashtags"]');
+const commentInputElement = uploadFormElement.querySelector('[name="description"]');
+const submitButtonElement = document.querySelector('.img-upload__submit');
+const imagePreviewElement = document.querySelector('.img-upload__preview img');
+const effectsPreviewElement = document.querySelectorAll('.effects__preview');
 
 const onInputEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -39,13 +39,13 @@ const onInputBlur = (evt) => {
 };
 
 const clearInputs = () => {
-  uploadButton.value = '';
-  hashtagInput.value = '';
-  commentInput.value = '';
+  uploadButtonElement.value = '';
+  hashtagInputElement.value = '';
+  commentInputElement.value = '';
 };
 
 export const hideFormUpload = () => {
-  modalForm.classList.add('hidden');
+  modalFormElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
   resetScale();
   resetSlider();
@@ -74,36 +74,36 @@ const onButtonCloseEnter = (evt) => {
 
 const addListeners = () => {
   document.addEventListener('keydown', onDocumentKeydown);
-  closeFormButton.addEventListener('click', onButtonCloseClick);
-  closeFormButton.addEventListener('keydown', onButtonCloseEnter);
-  hashtagInput.addEventListener('focus', onInputFocus);
-  hashtagInput.addEventListener('blur', onInputBlur);
-  commentInput.addEventListener('focus', onInputFocus);
-  commentInput.addEventListener('blur', onInputBlur);
+  closeFormButtonElement.addEventListener('click', onButtonCloseClick);
+  closeFormButtonElement.addEventListener('keydown', onButtonCloseEnter);
+  hashtagInputElement.addEventListener('focus', onInputFocus);
+  hashtagInputElement.addEventListener('blur', onInputBlur);
+  commentInputElement.addEventListener('focus', onInputFocus);
+  commentInputElement.addEventListener('blur', onInputBlur);
 };
 
 function deleteListeners() {
   document.removeEventListener('keydown', onDocumentKeydown);
-  closeFormButton.removeEventListener('click', onButtonCloseClick);
-  closeFormButton.removeEventListener('keydown', onButtonCloseEnter);
-  hashtagInput.removeEventListener('focus', onInputFocus);
-  hashtagInput.removeEventListener('blur', onInputBlur);
-  commentInput.removeEventListener('focus', onInputFocus);
-  commentInput.removeEventListener('blur', onInputBlur);
+  closeFormButtonElement.removeEventListener('click', onButtonCloseClick);
+  closeFormButtonElement.removeEventListener('keydown', onButtonCloseEnter);
+  hashtagInputElement.removeEventListener('focus', onInputFocus);
+  hashtagInputElement.removeEventListener('blur', onInputBlur);
+  commentInputElement.removeEventListener('focus', onInputFocus);
+  commentInputElement.removeEventListener('blur', onInputBlur);
 }
 
 const blockSubmitButton = () => {
-  submitButton.disabled = true;
-  submitButton.textContent = SubmitButtonText.SENDING;
+  submitButtonElement.disabled = true;
+  submitButtonElement.textContent = SubmitButtonText.SENDING;
 };
 
 const unblockSubmitButton = () => {
-  submitButton.disabled = false;
-  submitButton.textContent = SubmitButtonText.IDLE;
+  submitButtonElement.disabled = false;
+  submitButtonElement.textContent = SubmitButtonText.IDLE;
 };
 
 const showFormUpload = () => {
-  modalForm.classList.remove('hidden');
+  modalFormElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
   addListeners();
   initScale();
@@ -112,7 +112,7 @@ const showFormUpload = () => {
 
 export const initFormUpload = (onStartValidator, onSuccessUpload) => {
   onStartValidator();
-  uploadForm.addEventListener('submit', (evt) => {
+  uploadFormElement.addEventListener('submit', (evt) => {
     evt.preventDefault();
     if(validateValues()) {
       blockSubmitButton();
@@ -127,13 +127,13 @@ export const initFormUpload = (onStartValidator, onSuccessUpload) => {
         .finally(unblockSubmitButton);
     }
   });
-  uploadButton.addEventListener('change', () => {
-    const file = uploadButton.files[0];
+  uploadButtonElement.addEventListener('change', () => {
+    const file = uploadButtonElement.files[0];
     const fileName = file.name.toLowerCase();
     const matches = FILE_TYPES.some((extension) => fileName.endsWith(extension));
     if (matches) {
-      imagePreview.src = URL.createObjectURL(file);
-      effectsPreview.forEach((effect) => {
+      imagePreviewElement.src = URL.createObjectURL(file);
+      effectsPreviewElement.forEach((effect) => {
         effect.style.backgroundImage = `url('${URL.createObjectURL(file)}')`;
       });
       showFormUpload();

@@ -29,13 +29,13 @@ export const isEnterKey = (evt) => evt.key === 'Enter';
 export const removeLastCharacter = (string) => string ? string.slice(0, -1) : string;
 
 export const showAlert = (message) => {
-  const alertContainer = document.createElement('div');
-  Object.assign(alertContainer.style, alertStyles);
-  alertContainer.textContent = message;
-  document.body.append(alertContainer);
+  const alertContainerElement = document.createElement('div');
+  Object.assign(alertContainerElement.style, alertStyles);
+  alertContainerElement.textContent = message;
+  document.body.append(alertContainerElement);
 
   setTimeout(() => {
-    alertContainer.remove();
+    alertContainerElement.remove();
   }, ALERT_SHOW_TIME);
 };
 

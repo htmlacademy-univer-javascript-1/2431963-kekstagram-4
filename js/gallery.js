@@ -1,12 +1,9 @@
-import {renderSmallItems} from './small-items.js';
 import {initFormBigItem, showFormBigItem} from './form-big-item.js';
 
-const pictures = document.querySelector('.pictures');
+const picturesElement = document.querySelector('.pictures');
 
 export const initGallery = (items) => {
-  renderSmallItems(items);
   initFormBigItem();
-  document.querySelector('.comments-loader').remove();
   const onPictureClick = (evt) => {
     if(evt.target.closest('.picture')) {
       const currentPicture = items.find((item) => item.id === +evt.target.dataset.thumbnailId);
@@ -15,5 +12,6 @@ export const initGallery = (items) => {
       }
     }
   };
-  pictures.addEventListener('click', onPictureClick);
+  picturesElement.addEventListener('click', onPictureClick);
 };
+

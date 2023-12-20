@@ -48,7 +48,7 @@ const EFFECTS = [
     unit: ''
   }
 ];
-const imagePreview = document.querySelector('.img-upload__preview img');
+const imagePreviewElement = document.querySelector('.img-upload__preview img');
 const sliderElement = document.querySelector('.effect-level__slider');
 const sliderContainerElement = document.querySelector('.img-upload__effect-level');
 const valueElement = document.querySelector('.effect-level__value');
@@ -64,7 +64,7 @@ const hideSlider = () => {
 };
 
 const setSlider = (nameEffect, chosenEffect) => {
-  imagePreview.className = `effects__preview--${nameEffect}`;
+  imagePreviewElement.className = `effects__preview--${nameEffect}`;
   sliderElement.noUiSlider.updateOptions({
     range: {
       min: chosenEffect.min,
@@ -75,14 +75,14 @@ const setSlider = (nameEffect, chosenEffect) => {
   });
   sliderElement.noUiSlider.on('update', () => {
     valueElement.value = sliderElement.noUiSlider.get();
-    imagePreview.style.filter = `${chosenEffect.style}(${valueElement.value}${chosenEffect.unit})`;
+    imagePreviewElement.style.filter = `${chosenEffect.style}(${valueElement.value}${chosenEffect.unit})`;
   });
 };
 
 export const resetSlider = () => {
   sliderElement.noUiSlider.set(defaultEffect.max);
-  imagePreview.style.filter = '';
-  imagePreview.className = 'effects__preview--none';
+  imagePreviewElement.style.filter = '';
+  imagePreviewElement.className = 'effects__preview--none';
   valueElement.value = defaultEffect.max;
   effectRadioElement.checked = true;
 };
@@ -121,7 +121,7 @@ export const initSlider = () => {
       case 'none':
         hideSlider();
         setSlider(nameEffect, chosenEffect);
-        imagePreview.style.filter = '';
+        imagePreviewElement.style.filter = '';
         break;
       case 'chrome':
         showSlider();
