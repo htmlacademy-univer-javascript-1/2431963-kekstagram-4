@@ -1,10 +1,9 @@
-const AVATAR_SIZE = 35;
 const COMMENT_COUNT = 5;
+const AVATAR_SIZE = 35;
 
-const commentList = document.querySelector('.social__comments');
-const currentCounterElement = document.querySelector('.comments-current');
+const commentListElement = document.querySelector('.social__comments');
+const counterRenderedCommentsElement = document.querySelector('.comments-current');
 
-//Создать комментарий
 const createComment = (comment) => {
   const {avatar, name, message} = comment;
 
@@ -28,57 +27,64 @@ const createComment = (comment) => {
   return commentLiElement;
 };
 
-//Добавить комментарий в список
 const addComment = (comment) => {
-  commentList.append(createComment(comment));
+  commentListElement.append(createComment(comment));
 };
 
-//Вычислить счетчик загруженных комментариев
 const calcCounterLoadedComments = (marker, length) => marker > length ? length : marker;
 
-//Скрыть кнопку загрузки скрытых комментариев (Загрузить еще)
-const hideMoreButton = () => {
-  document.querySelector('.comments-loader').classList.add('hidden');
+const createLoadMoreButton = () => {
+  const loadMoreButtonElement = document.createElement('button');
+  loadMoreButtonElement.setAttribute('type', 'button');
+  loadMoreButtonElement.classList.add('social__comments-loader');
+  loadMoreButtonElement.classList.add('comments-loader');
+  loadMoreButtonElement.textContent = 'Загрузить еще';
+  commentListElement.after(loadMoreButtonElement);
 };
 
-//Фунция обратного вызова для обработки загрузки скрытых комментариев
-const onLoadMore = (items) => (evt) => {
+const hideLoadMoreButton = () => {
+  if (document.querySelector('.comments-loader') !== null) {
+    document.querySelector('.comments-loader').classList.add('hidden');
+  }
+};
+
+const onLoadMoreButtonClick = (items) => (evt) => {
   evt.preventDefault();
 
-  let marker = commentList.childNodes.length;
+  let marker = commentListElement.childNodes.length;
   items.slice(marker, marker + COMMENT_COUNT).forEach((comment) => {
     addComment(comment);
   });
   marker += COMMENT_COUNT;
 
-  currentCounterElement.textContent = calcCounterLoadedComments(marker, items.length);
+  counterRenderedCommentsElement.textContent = calcCounterLoadedComments(marker, items.length);
 
   if(marker >= items.length) {
-    hideMoreButton();
+    hideLoadMoreButton();
   }
 };
 
-//Отобразить комментарии, загруженные по умолчанию
 const renderVisibleComments = (comments) => {
   comments.forEach((comment) => {
     addComment(comment);
   });
-  hideMoreButton();
-  currentCounterElement.textContent = comments.length;
+  hideLoadMoreButton();
+  counterRenderedCommentsElement.textContent = comments.length;
 };
 
-//Отобразить скрытые комментарии
 const renderInvisibleComments = (comments) => {
   comments.slice(0, COMMENT_COUNT).forEach((comment) => {
     addComment(comment);
   });
-  currentCounterElement.textContent = calcCounterLoadedComments(commentList.childNodes.length, comments.length);
-  document.querySelector('.comments-loader').addEventListener('click', onLoadMore(comments));
+  counterRenderedCommentsElement.textContent = calcCounterLoadedComments(commentListElement.childNodes.length, comments.length);
+  if (document.querySelector('.comments-loader') === null) {
+    createLoadMoreButton();
+  }
+  document.querySelector('.comments-loader').addEventListener('click', onLoadMoreButtonClick(comments));
 };
 
-//Отобразить комментарии
 const renderComments = (comments) => {
-  commentList.innerHTML = '';
+  commentListElement.innerHTML = '';
 
   if(comments.length <= COMMENT_COUNT) {
     renderVisibleComments(comments);
@@ -87,17 +93,16 @@ const renderComments = (comments) => {
   }
 };
 
-//Отобразить полную информацию о фотографии
-export const renderItemDetails = (data, target) => {
-  const {comments, description, likes, url} = data;
+export const renderItemDetails = (item, outputContainer) => {
+  const {comments, description, likes, url} = item;
 
-  const bigImage = target.querySelector('.big-picture__img img');
+  const bigImage = outputContainer.querySelector('.big-picture__img img');
   bigImage.src = url;
   bigImage.alt = description;
 
-  target.querySelector('.social__caption').textContent = description;
-  target.querySelector('.likes-count').textContent = likes;
-  target.querySelector('.comments-count').textContent = comments.length;
+  outputContainer.querySelector('.social__caption').textContent = description;
+  outputContainer.querySelector('.likes-count').textContent = likes;
+  outputContainer.querySelector('.comments-count').textContent = comments.length;
 
   renderComments(comments);
 };

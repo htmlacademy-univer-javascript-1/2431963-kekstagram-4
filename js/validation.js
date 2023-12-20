@@ -11,32 +11,32 @@ const MESSAGES = {
   maxLengthComment: `Максимальная длина комментария ${COMMENT_MAX_LENGTH} символов`
 };
 
-const uploadForm = document.querySelector('#upload-select-image');
-const hashtagInput = uploadForm.querySelector('[name="hashtags"]');
-const commentInput = uploadForm.querySelector('[name="description"]');
+const uploadFormElement = document.querySelector('#upload-select-image');
+const hashtagInputElement = uploadFormElement.querySelector('[name="hashtags"]');
+const commentInputElement = uploadFormElement.querySelector('[name="description"]');
 
-const pristine = new Pristine(uploadForm, {
+const validator = new Pristine(uploadFormElement, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
   errorTextTag: 'div',
   errorTextClass: 'text__error'
 });
 
-const checkHasHash = () => hashtagInput.value !== '' ? hashtagInput.value
+const onCheckHasHash = () => hashtagInputElement.value !== '' ? hashtagInputElement.value
   .trim()
   .split(' ')
   .filter(Boolean)
   .every((hashtag) => HASHTAG_REGEX.test(hashtag)) : true;
-const checkMaxQuantity = () => checkLength(hashtagInput.value.split(' ').filter(Boolean), HASHTAG_MAX_QUANTITY);
-const constNoRepetitions = () => checkRepeats(hashtagInput.value.split(' ').filter(Boolean));
-const checkMaxLengthComment = () => checkLength(commentInput.value, COMMENT_MAX_LENGTH);
+const onCheckMaxQuantity = () => checkLength(hashtagInputElement.value.split(' ').filter(Boolean), HASHTAG_MAX_QUANTITY);
+const onCheckNoRepetitions = () => checkRepeats(hashtagInputElement.value.split(' ').filter(Boolean));
+const onCheckMaxLengthComment = () => checkLength(commentInputElement.value, COMMENT_MAX_LENGTH);
 
 export const initValidation = () => {
-  pristine.addValidator(hashtagInput, checkHasHash, MESSAGES.hasHash);
-  pristine.addValidator(hashtagInput, checkMaxQuantity, MESSAGES.maxQuantity);
-  pristine.addValidator(hashtagInput, constNoRepetitions, MESSAGES.noRepetitions);
-  pristine.addValidator(commentInput, checkMaxLengthComment, MESSAGES.maxLengthComment);
+  validator.addValidator(hashtagInputElement, onCheckHasHash, MESSAGES.hasHash);
+  validator.addValidator(hashtagInputElement, onCheckMaxQuantity, MESSAGES.maxQuantity);
+  validator.addValidator(hashtagInputElement, onCheckNoRepetitions, MESSAGES.noRepetitions);
+  validator.addValidator(commentInputElement, onCheckMaxLengthComment, MESSAGES.maxLengthComment);
 };
 
-export const validate = () => pristine.validate();
-export const reset = () => pristine.reset();
+export const validateValues = () => validator.validate();
+export const resetValidator = () => validator.reset();

@@ -1,48 +1,43 @@
 import {isEscapeKey} from './utils.js';
 
-//Находим темлеты #success и #error и получаем их содержимое
-const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
-const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
+const successMessageTemplateElement = document.querySelector('#success').content.querySelector('.success');
+const errorMessageTemplateElement = document.querySelector('#error').content.querySelector('.error');
 
-//Находит элемент с классом или success или error, нас странице он всегда один
 export const checkTypeMessage = () => document.querySelector('.success, .error');
 
-//Функция закрытия окна, удаляем обработчики и сам эелемент
-const closeMessage = () => {
-  document.removeEventListener('keydown', onMessageEscapeKeydown);
+const onMessageEscKeydown = (evt) => {
+  if (isEscapeKey(evt) && checkTypeMessage()) {
+    evt.preventDefault();
+    closeMessageBox();
+  }
+};
+
+const onMessageOutsideClick = (evt) => {
+  const messageElement = checkTypeMessage();
+  if (evt.target === messageElement) {
+    closeMessageBox();
+  }
+};
+
+function closeMessageBox () {
+  document.removeEventListener('keydown', onMessageEscKeydown);
   document.removeEventListener('click', onMessageOutsideClick);
+
   const messageElement = checkTypeMessage();
   if (messageElement) {
     messageElement.remove();
   }
-};
-
-//Обработка ECS
-function onMessageEscapeKeydown (evt) {
-  if (isEscapeKey(evt) && checkTypeMessage()) {
-    evt.preventDefault();
-    closeMessage();
-  }
 }
 
-//Обработка клика вне информационного окна
-function onMessageOutsideClick (evt) {
-  const messageElement = checkTypeMessage();
-  if (evt.target === messageElement) {
-    closeMessage();
-  }
-}
-
-//Открыть инофрмационное окно и добавить обработчики
-export const openMessage = (typeMessage) => {
-  const message = typeMessage === 'success' ? successMessageTemplate.cloneNode(true) : errorMessageTemplate.cloneNode(true);
+export const openMessageBox = (typeMessage) => {
+  const message = typeMessage === 'success' ? successMessageTemplateElement.cloneNode(true) : errorMessageTemplateElement.cloneNode(true);
   const messageButton = message.querySelector(`.${typeMessage}__button`);
   document.body.append(message);
 
   messageButton.addEventListener('click', () => {
-    closeMessage();
+    closeMessageBox();
   });
 
-  document.addEventListener('keydown', onMessageEscapeKeydown);
+  document.addEventListener('keydown', onMessageEscKeydown);
   document.addEventListener('click', onMessageOutsideClick);
 };

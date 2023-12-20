@@ -1,143 +1,142 @@
-import {validate, reset} from './validation.js';
+import {validateValues, resetValidator} from './validation.js';
 import {isEnterKey, isEscapeKey} from './utils.js';
 import {initScale, resetScale} from './scale.js';
 import {destroySlider, initSlider, resetSlider} from './slider.js';
 import {sendData} from './api.js';
-import {openMessage, checkTypeMessage} from './message.js';
+import {openMessageBox, checkTypeMessage} from './message.js';
+
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+const SUCCESS_TYPE_MESSAGE = 'success';
+const ERROR_TYPE_MESSAGE = 'error';
 
 const SubmitButtonText = {
   IDLE: 'Опубликовать',
   SENDING: 'Публикую...'
 };
-const FILE_TYPES = ['jpg', 'jpeg', 'png'];
-const SUCCESS_TYPE_MESSAGE = 'success';
-const ERROR_TYPE_MESSAGE = 'error';
 
-const uploadButton = document.querySelector('#upload-file');
-const modalPopup = document.querySelector('.img-upload__overlay');
-const closePopup = document.querySelector('#upload-cancel');
-const uploadForm = document.querySelector('#upload-select-image');
-const hashtagInput = uploadForm.querySelector('[name="hashtags"]');
-const commentInput = uploadForm.querySelector('[name="description"]');
-const submitButton = document.querySelector('.img-upload__submit');
-const imagePreview = document.querySelector('.img-upload__preview img');
-const effectsPreview = document.querySelectorAll('.effects__preview');
+const uploadButtonElement = document.querySelector('#upload-file');
+const modalFormElement = document.querySelector('.img-upload__overlay');
+const closeFormButtonElement = document.querySelector('#upload-cancel');
+const uploadFormElement = document.querySelector('#upload-select-image');
+const hashtagInputElement = uploadFormElement.querySelector('[name="hashtags"]');
+const commentInputElement = uploadFormElement.querySelector('[name="description"]');
+const submitButtonElement = document.querySelector('.img-upload__submit');
+const imagePreviewElement = document.querySelector('.img-upload__preview img');
+const effectsPreviewElement = document.querySelectorAll('.effects__preview');
 
-const disableEsc = (evt) => {
+const onInputEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.stopPropagation();
   }
 };
 
-const onInputsFocus = (evt) => {
-  evt.target.addEventListener('keydown', disableEsc);
+const onInputFocus = (evt) => {
+  evt.target.addEventListener('keydown', onInputEscKeydown);
 };
 
-const onInputsBlur = (evt) => {
-  evt.target.removeEventListener('keydown', disableEsc);
+const onInputBlur = (evt) => {
+  evt.target.removeEventListener('keydown', onInputEscKeydown);
 };
 
 const clearInputs = () => {
-  uploadButton.value = '';
-  hashtagInput.value = '';
-  commentInput.value = '';
+  uploadButtonElement.value = '';
+  hashtagInputElement.value = '';
+  commentInputElement.value = '';
 };
 
-export const hidePopup = () => {
-  modalPopup.classList.add('hidden');
+export const hideFormUpload = () => {
+  modalFormElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
   resetScale();
   resetSlider();
   destroySlider();
   deleteListeners();
   clearInputs();
-  reset();
+  resetValidator();
 };
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt) && !checkTypeMessage()) {
     evt.preventDefault();
-    hidePopup();
+    hideFormUpload();
   }
 };
 
 const onButtonCloseClick = () => {
-  hidePopup();
+  hideFormUpload();
 };
 
 const onButtonCloseEnter = (evt) => {
   if (isEnterKey(evt)) {
-    hidePopup();
+    hideFormUpload();
   }
 };
 
 const addListeners = () => {
   document.addEventListener('keydown', onDocumentKeydown);
-  closePopup.addEventListener('click', onButtonCloseClick);
-  closePopup.addEventListener('keydown', onButtonCloseEnter);
-  hashtagInput.addEventListener('focus', onInputsFocus);
-  hashtagInput.addEventListener('blur', onInputsBlur);
-  commentInput.addEventListener('focus', onInputsFocus);
-  commentInput.addEventListener('blur', onInputsBlur);
+  closeFormButtonElement.addEventListener('click', onButtonCloseClick);
+  closeFormButtonElement.addEventListener('keydown', onButtonCloseEnter);
+  hashtagInputElement.addEventListener('focus', onInputFocus);
+  hashtagInputElement.addEventListener('blur', onInputBlur);
+  commentInputElement.addEventListener('focus', onInputFocus);
+  commentInputElement.addEventListener('blur', onInputBlur);
 };
 
 function deleteListeners() {
   document.removeEventListener('keydown', onDocumentKeydown);
-  closePopup.removeEventListener('click', onButtonCloseClick);
-  closePopup.removeEventListener('keydown', onButtonCloseEnter);
-  hashtagInput.removeEventListener('focus', onInputsFocus);
-  hashtagInput.removeEventListener('blur', onInputsBlur);
-  commentInput.removeEventListener('focus', onInputsFocus);
-  commentInput.removeEventListener('blur', onInputsBlur);
+  closeFormButtonElement.removeEventListener('click', onButtonCloseClick);
+  closeFormButtonElement.removeEventListener('keydown', onButtonCloseEnter);
+  hashtagInputElement.removeEventListener('focus', onInputFocus);
+  hashtagInputElement.removeEventListener('blur', onInputBlur);
+  commentInputElement.removeEventListener('focus', onInputFocus);
+  commentInputElement.removeEventListener('blur', onInputBlur);
 }
 
 const blockSubmitButton = () => {
-  submitButton.disabled = true;
-  submitButton.textContent = SubmitButtonText.SENDING;
+  submitButtonElement.disabled = true;
+  submitButtonElement.textContent = SubmitButtonText.SENDING;
 };
 
 const unblockSubmitButton = () => {
-  submitButton.disabled = false;
-  submitButton.textContent = SubmitButtonText.IDLE;
+  submitButtonElement.disabled = false;
+  submitButtonElement.textContent = SubmitButtonText.IDLE;
 };
 
-
-const showPopup = () => {
-  modalPopup.classList.remove('hidden');
+const showFormUpload = () => {
+  modalFormElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
   addListeners();
   initScale();
   initSlider();
 };
 
-export const initFormUpload = (startValidator, onSuccess) => {
-  startValidator();
-  uploadForm.addEventListener('submit', (evt) => {
+export const initFormUpload = (onStartValidator, onSuccessUpload) => {
+  onStartValidator();
+  uploadFormElement.addEventListener('submit', (evt) => {
     evt.preventDefault();
-    const isValid = validate();
-    if(isValid) {
+    if(validateValues()) {
       blockSubmitButton();
       sendData(new FormData(evt.target))
-        .then(onSuccess)
-        .then(() => openMessage(SUCCESS_TYPE_MESSAGE))
+        .then(onSuccessUpload)
+        .then(() => openMessageBox(SUCCESS_TYPE_MESSAGE))
         .catch(
           () => {
-            openMessage(ERROR_TYPE_MESSAGE);
+            openMessageBox(ERROR_TYPE_MESSAGE);
           }
         )
         .finally(unblockSubmitButton);
     }
   });
-  uploadButton.addEventListener('change', () => {
-    const file = uploadButton.files[0];
+  uploadButtonElement.addEventListener('change', () => {
+    const file = uploadButtonElement.files[0];
     const fileName = file.name.toLowerCase();
-    const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+    const matches = FILE_TYPES.some((extension) => fileName.endsWith(extension));
     if (matches) {
-      imagePreview.src = URL.createObjectURL(file);
-      effectsPreview.forEach((effect) => {
+      imagePreviewElement.src = URL.createObjectURL(file);
+      effectsPreviewElement.forEach((effect) => {
         effect.style.backgroundImage = `url('${URL.createObjectURL(file)}')`;
       });
-      showPopup();
+      showFormUpload();
     }
   });
 };
